@@ -1,0 +1,37 @@
+Flow
+1. User open signup form
+2. Will get 3 options to signup
+ - email/mobile
+ - gmail
+ - linkedin
+3. On email/mobile signup
+ - user will input email id or mobile no on text box
+ - a service will be called to check if email/mobile already exists
+ - if exist, then will show message "You are already a part of our community. Please Login to continue"
+ - If no exist, then an OTP of 6 digit will be generated against the email id/mobile no along with a token and will be sent to user
+ - User will have to put the OTP and will press next button
+ - an web service/api will be called, will validate the token and otp. If valid, then will insert signup data in DB and signup will be done
+ - in next screen, will ask user to create password(min 6 characters, 1 upper case, 1 numeric, 1 special character)
+ - Will encrypt the password and will save in DB
+4. In next screen, will open a form to insert following details
+ - First Name
+ - last Name
+ - Linkedin profile URL
+ - City
+ - State 
+ - Country
+
+
+Technical details
+1. Frontend - React js
+2. back end - node js
+3. DB - Mongo
+4. There will be 2 documents in mongo
+ - user_OTP (token, email id, mobile no, otp, creation time, expiry time)
+ - user_details (fname, lname, email, mobile, password, signup_date, linkedin profile, city, state, country)
+5. In each mongo document, there will be a unique field
+
+
+
+#Note: UI/html you can create by own
+there will also be a temporary admin page... which will show data of mongo DB
