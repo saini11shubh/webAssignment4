@@ -39,7 +39,7 @@ userRouter.post("/signup", async (req, res) => {
                 console.log(otp.toString().length);
             } while (otp.toString().length < 6)
 
-           setTimeout(removeOtp, 1000*30);
+           const expireOtp =setTimeout(removeOtp, 1000*30);
           
             function removeOtp() {      
                 console.log("its working")         
