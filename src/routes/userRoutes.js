@@ -17,27 +17,23 @@ userRouter.post("/signup", async (req, res) => {
     emailphone = req.body.emailphone;
     console.log("Email phone " + emailphone);
     try {
-            const existingUser = await SignupData.find({"user_OTP.mobile_no":emailphone})
+            const existingUser = await SignupData.findOne({"user_OTP.mobile_no":emailphone})
           
-            // console.log(existingUser)
+            
             debugger;
             console.log("isssssssssssssssss"+existingUser)
             if (existingUser) {
                 return res.status(400).json({ message: "User already exist" })
             }
         //  const otp="123456"
-        do {
-            otp = Math.floor((Math.random() * 1000000) + 1);
-            console.log(otp.toString().length);
-
-        } while (otp < 6)
-
-
-
-        console.log("Your Otp is " + otp)
-
-        res.sendFile(path.join(__dirname, '../views/verify.html'))
-
+        else{
+            do {
+                otp = Math.floor((Math.random() * 1000000) + 1);
+                console.log(otp.toString().length);    
+            } while (otp < 6)       
+            console.log("Your Otp is " + otp)    
+            res.sendFile(path.join(__dirname, '../template/verify.html'))
+        }    
     } catch (error) {
         console.log(error);
         res.status(500).send({ message: "Internal Server Error" })
@@ -49,7 +45,7 @@ userRouter.post("/details", async (req, res) => {
     if (otp != req.body.otp) {
         res.status(200).send({ message: "please Enter valid otp " })
     }
-    res.sendFile(path.join(__dirname, '../views/details.html'))
+    res.sendFile(path.join(__dirname, '../template/details.html'))
 
 });
 
@@ -59,7 +55,7 @@ userRouter.post("/details", async (req, res) => {
     if (otp != req.body.otp) {
         res.status(200).send({ message: "please Enter valid otp " })
     }
-    res.sendFile(path.join(__dirname, '../views/details.html'))
+    res.sendFile(path.join(__dirname, '../template/details.html'))
 });
 
 userRouter.post('/register', async (req, res) => {
@@ -115,21 +111,21 @@ userRouter.post('/register', async (req, res) => {
             country: req.body.country
         }
     })
-    userid=newUser._id
-    console.log(newUser._id);
-
+    
     const token = jwt.sign({ id: newUser._id }, SECRET_KEY)
     const result = await newUser.save()
-
-    await SignupData.findByIdAndUpdate(userid, { token: token },
-        function (err, docs) {
-            if (err) {
-                console.log(err)
-            }
-            else {
-                console.log("Updated User : ", docs);
-            }
-        });
+    
+    // userid=newUser._id
+    // console.log(newUser._id);
+    // await SignupData.findByIdAndUpdate(userid, { token: token },
+    //     function (err, docs) {
+    //         if (err) {
+    //             console.log(err)
+    //         }
+    //         else {
+    //             console.log("Updated User : ", docs);
+    //         }
+    //     });
     // const filter={user_OTP:{
     //     mobile_no:emailphone
     // }}

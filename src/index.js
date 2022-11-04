@@ -8,7 +8,9 @@ const userRouter=require("./routes/userRoutes")
 const adminRouter=require("./routes/adminRoutes")
 app.use(express.json());  // recognize the incoming Request object as a JSON object
 app.use(bodyParser.urlencoded({ extended: true }));
-
+const ejs = require('ejs');
+app.set('view engine', 'ejs');
+app.set('views',path.join(__dirname,"./template/views"))
 app.use("/",userRouter);
 app.use("/",adminRouter);
 
@@ -22,6 +24,6 @@ app.listen(port, () => {
 })
 
 app.get("/",(req,res)=>{
-    res.sendFile(path.join(__dirname,'./views/signup.html'))
+    res.sendFile(path.join(__dirname,'./template/signup.html'))
 })
 
