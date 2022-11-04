@@ -18,13 +18,13 @@ adminRouter.post("/admin", async (req, res) => {
     console.log(login_id);
     console.log(password);
 
-    const existingUser = adminData.findOne({ login_id: login_id, password: password })
+    const existingUser = await adminData.findOne({ login_id: login_id, password: password })
     console.log(existingUser);
     if (existingUser != null) {
         console.log("its working")
        //res.status(200).send({ message: "Successfully Enter" })
          SignupData.find({}, (err, result) => {
-            if (err) throw err;
+            if (err) throw err;           
             res.render('index', {
               dataList: result
             })

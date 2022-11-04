@@ -14,26 +14,40 @@ const path = require('path')
 
 var otp, emailphone;
 userRouter.post("/signup", async (req, res) => {
+
     emailphone = req.body.emailphone;
+
+    //emailphone validation call function
+    if (!validateEmailPhone(emailphone)) {
+        return res.status(400).json({ response: 'Invalid Email and Phone' });
+    }
+
     console.log("Email phone " + emailphone);
     try {
-            const existingUser = await SignupData.findOne({"user_OTP.mobile_no":emailphone})
-          
-            
-            debugger;
-            console.log("isssssssssssssssss"+existingUser)
-            if (existingUser) {
-                return res.status(400).json({ message: "User already exist" })
-            }
+        const existingUser = await SignupData.findOne({ "user_OTP.mobile_no": emailphone })
+
+
+        debugger;
+        console.log("isssssssssssssssss" + existingUser)
+        if (existingUser) {
+            return res.status(400).json({ message: "User already exist" })
+        }
         //  const otp="123456"
-        else{
+        else {
             do {
                 otp = Math.floor((Math.random() * 1000000) + 1);
-                console.log(otp.toString().length);    
-            } while (otp < 6)       
-            console.log("Your Otp is " + otp)    
+                console.log(otp.toString().length);
+            } while (otp.toString().length < 6)
+
+           setTimeout(removeOtp, 1000*30);
+          
+            function removeOtp() {      
+                console.log("its working")         
+             otp=""
+            }
+            console.log("Your Otp is " + otp)
             res.sendFile(path.join(__dirname, '../template/verify.html'))
-        }    
+        }
     } catch (error) {
         console.log(error);
         res.status(500).send({ message: "Internal Server Error" })
@@ -45,6 +59,7 @@ userRouter.post("/details", async (req, res) => {
     if (otp != req.body.otp) {
         res.status(200).send({ message: "please Enter valid otp " })
     }
+
     res.sendFile(path.join(__dirname, '../template/details.html'))
 
 });
@@ -55,6 +70,7 @@ userRouter.post("/details", async (req, res) => {
     if (otp != req.body.otp) {
         res.status(200).send({ message: "please Enter valid otp " })
     }
+
     res.sendFile(path.join(__dirname, '../template/details.html'))
 });
 
@@ -88,16 +104,15 @@ userRouter.post('/register', async (req, res) => {
     let lname = req.body.last_name;
     let phone = req.body.phone_no;
     let email = req.body.email;
-    // let address = req.body.city + " , " + req.body.state + " , " + req.body.country;
+
     let password = await bcrypt.hash(req.body.password, 10);
     console.log(password);
-    // console.log(req.body);
+
     const newUser = await SignupData.create({
         user_OTP:
         {
             mobile_no: emailphone,
             otp: otp,
-            token: "null"
         },
         user_details:
         {
@@ -111,40 +126,25 @@ userRouter.post('/register', async (req, res) => {
             country: req.body.country
         }
     })
-    
+
     const token = jwt.sign({ id: newUser._id }, SECRET_KEY)
     const result = await newUser.save()
-    
-    // userid=newUser._id
-    // console.log(newUser._id);
-    // await SignupData.findByIdAndUpdate(userid, { token: token },
-    //     function (err, docs) {
-    //         if (err) {
-    //             console.log(err)
-    //         }
-    //         else {
-    //             console.log("Updated User : ", docs);
-    //         }
-    //     });
-    // const filter={user_OTP:{
-    //     mobile_no:emailphone
-    // }}
-    // const update = {user_OTP:{
-    //     token:token
-    // }}
 
-    // console.log(filter)
-
-    // await SignupData.findby(filter, update);
-    // SignupData.tokens=this.SignupData.tokens({token:token})
-
-
-    //await SignupData.update(
-
+    userid = newUser._id
+    console.log(userid)
+    SignupData.findByIdAndUpdate(userid, { "user_OTP.token": token }, (err, result) => {
+        if (err) throw err;
+        console.log(result);
+    });
     return res.json({ status: 201, message: 'user created', data: result, token: token })
 
 
 });
+
+//emailphone validation call function
+function validateEmailPhone(emailphone) {
+    return !validator.isEmpty(emailphone) && validator.isAlphanumeric(emailphone) && validator.isLength(emailphone, { min: 6 });
+}
 
 // Validates a username
 function validateUsername(username) {

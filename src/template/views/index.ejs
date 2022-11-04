@@ -16,12 +16,14 @@
     <thead>
       <tr>
         <th scope="col">#</th>
+        <th scope="col"> Login Id</th>
+        <th scope="col"> Login OTP</th>
         <th scope="col">First name</th>
         <th scope="col">Last name</th>
         <th scope="col">Mobile no</th>
         <th scope="col">Email Id</th>
         <th scope="col">Address</th>
-        <th scope="col">Login id</th>
+        <th scope="col">signup Time</th>
       </tr>
     </thead>
     <tbody>
@@ -32,25 +34,30 @@
               <%=i++%>
             </th>
             <td>
+              <%=result.user_OTP.mobile_no%>
+            </td>
+            <td>
+              <%=result.user_OTP.otp%>
+            </td>
+            <td>
               <%=result.user_details.first_name%>
             </td>
             <td>
-              <%=result.last_name%>
+              <%=result.user_details.last_name%>
             </td>
             <td>
-              <%=result.phone_no%>
+              <%=result.user_details.phone_no%>
             </td>
             <td>
-              <%=result.email%>
+              <%=result.user_details.email%>
             </td>
             <td>
-              <%=result.street%>
-              <%=result.city%>
-              <%=result.state%>
-              <%=result.country%>
+              <%=result.user_details.city%>
+              <%=result.user_details.state%>
+              <%=result.user_details.country%>
             </td>
             <td>
-              <%=result.login_id%>
+              <%=result.user_details. signup_date%>
             </td>
           </tr>
           <% })%>
